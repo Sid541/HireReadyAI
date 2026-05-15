@@ -1,65 +1,135 @@
-main{
+// ── Variables ───────────────────────────────────────────────────────────────
+$primary-color: #e1034d;
+$bg-dark: #0d1117; // Matches your interview page background
+$card-bg: #161b22;
+$input-bg: #0d1117;
+$border-color: #30363d;
+$text-primary: #e6edf3;
+$text-muted: #8b949e;
+$transition: all 0.2s ease-in-out;
+
+main {
     min-height: 100vh;
     width: 100%;
-
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: $bg-dark;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: $text-primary;
 
+    .form-container {
+        width: 100%;
+        max-width: 400px;
+        padding: 2.5rem;
+        background-color: $card-bg;
+        border: 1px solid $border-color;
+        border-radius: 1.25rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 
-    .form-container{
-        min-width: 350px;
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            letter-spacing: -0.02em;
 
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
+            span {
+                color: $primary-color;
+            }
+        }
 
-    form{
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .input-group{
-        display: flex;
-        flex-direction: column;
-
-        gap: 0.5rem;
-
-
-        input{
-            border: none;
-            outline: none;
-            padding-inline: 1rem;
-            padding-block: 0.75rem;
-            border-radius: 0.75rem;
+        p {
+            text-align: center;
+            font-size: 0.9rem;
+            color: $text-muted;
+            margin-top: 1.5rem;
         }
     }
 
-    a{
-        color: #e1034d;
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        margin-top: 1.5rem;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: $text-muted;
+            margin-left: 0.2rem;
+        }
+
+        input {
+            background-color: $input-bg;
+            border: 1px solid $border-color;
+            outline: none;
+            padding: 0.8rem 1rem;
+            border-radius: 0.75rem;
+            color: $text-primary;
+            font-size: 0.95rem;
+            transition: $transition;
+
+            &::placeholder {
+                color: #484f58;
+            }
+
+            &:focus {
+                border-color: $primary-color;
+                box-shadow: 0 0 0 3px rgba($primary-color, 0.15);
+            }
+        }
+    }
+
+    a {
+        color: $primary-color;
         text-decoration: none;
+        font-weight: 600;
+        transition: $transition;
+
+        &:hover {
+            text-decoration: underline;
+            filter: brightness(1.2);
+        }
     }
 }
 
-.button{
-
+// ── Global Button Component ──────────────────────────────────────────────────
+.button.primary-button {
     border: none;
     outline: none;
-    padding-inline: 1.5rem;
-    padding-block: 0.75rem;
-    border-radius: 1rem;
+    background-color: $primary-color;
+    color: white;
+    padding: 0.85rem;
+    border-radius: 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
     cursor: pointer;
+    transition: $transition;
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 12px rgba($primary-color, 0.3);
 
-    transition: all 0.3s ease-in-out;
-
-    &.primary-button{
-        background-color: #e1034d;
-        color: white;
+    &:hover {
+        background-color: darken($primary-color, 5%);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba($primary-color, 0.4);
     }
 
-    &:active{
-        transform: scale(0.9);
+    &:active {
+        transform: translateY(0);
+    }
+
+    &:disabled {
+        background-color: #3d1a26;
+        color: $text-muted;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
     }
 }

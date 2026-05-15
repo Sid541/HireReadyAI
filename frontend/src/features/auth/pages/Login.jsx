@@ -18,8 +18,11 @@ const Login = () => {
         try {
             const res = await axios.post(
                 "http://localhost:3000/api/auth/login", // ✅ fixed
-                { email, password }
+                { email, password },
+                { withCredentials: true }
+                
             );
+            
 
             console.log("Login success:", res.data);
 
@@ -27,7 +30,11 @@ const Login = () => {
                 localStorage.setItem("token", res.data.token);
             }
 
-            navigate('/');
+            navigate("/", {
+    state: {
+        isLoggedIn: true
+    }
+});
 
         } catch (err) {
             console.error(err);
@@ -45,40 +52,47 @@ const Login = () => {
         );
     }
 
-    return (
-        <main>
-            <div className="form-container">
-                <h1>Login</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="input-group">
-                        <label>Email</label>
-                        <input
-                            onChange={(e) => setEmail(e.target.value)}
-                            type="email"
-                            placeholder="Enter email address"
-                        />
-                    </div>
+   // Inside the return statement of Login.jsx
+// Replace the return statement in Login.jsx with this:
+return (
+    <main>
+        <div className="form-container">
+            <h1>Login</h1>
+            <form onSubmit={handleSubmit}>
+                <div className="input-group">
+                    <label>Email</label>
+                    <input
+                        onChange={(e) => setEmail(e.target.value)}
+                        type="email"
+                        required
+                        placeholder="Enter email address"
+                    />
+                </div>
 
-                    <div className="input-group">
-                        <label>Password</label>
-                        <input
-                            onChange={(e) => setPassword(e.target.value)}
-                            type="password"
-                            placeholder="Enter password"
-                        />
-                    </div>
+                <div className="input-group">
+                    <label>Password</label>
+                    <input
+                        onChange={(e) => setPassword(e.target.value)}
+                        type="password"
+                        required
+                        placeholder="Enter password"
+                    />
+                </div>
 
-                    <button className='button primary-button'>
-                        Login
-                    </button>
-                </form>
+                <button 
+                    className='button primary-button' 
+                    disabled={loading}
+                >
+                    {loading ? "Authenticating..." : "Login"}
+                </button>
+            </form>
 
-                <p>
-                    Don't have an account? <Link to="/register">Register</Link>
-                </p>
-            </div>
-        </main>
-    )
+            <p>
+                Don't have an account? <Link to="/register">Register</Link>
+            </p>
+        </div>
+    </main>
+)
 }
 
 export default Login;

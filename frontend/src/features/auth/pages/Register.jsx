@@ -23,7 +23,8 @@ const Register = () => {
                    username,
                     email,
                     password
-                }
+                },
+                { withCredentials: true }
             );
 
             console.log("Register success:", res.data);

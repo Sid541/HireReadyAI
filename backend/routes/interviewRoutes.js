@@ -1,5 +1,47 @@
-import express from "express";
+import express from "express"
+import multer from "multer"
 
-const interviewRouter = express.Router();
+import {
+    generateInterViewReportController,
+    getAllInterviewReportsController,
+    getInterviewReportByIdController,
+    generateResumePdfController
+} from "../controllers/interviewController.js"
 
-module.exports = interviewRouter;
+import { isAuthenticated } from "../middlewares/authMiddleware.js"
+
+const interviewRouter = express.Router()
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = [
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ]
+        allowedTypes.includes(file.mimetype) ? cb(null, true) : cb(new Error("Only PDF and DOCX allowed"))
+    }
+})
+
+// ✅ DEBUG ROUTE — no auth, accepts any field
+interviewRouter.post("/debug", multer().any(), (req, res) => {
+    res.json({
+        fields: Object.keys(req.body),
+        files: req.files?.map(f => f.fieldname)
+    })
+})
+
+interviewRouter.post(
+    "/",
+    isAuthenticated,
+    upload.fields([
+        { name: "resumeFile", maxCount: 1 }
+    ]),
+    generateInterViewReportController
+)
+interviewRouter.get("/", isAuthenticated, getAllInterviewReportsController)
+interviewRouter.get("/report/:interviewId", isAuthenticated, getInterviewReportByIdController)
+interviewRouter.post("/resume/pdf/:interviewReportId", isAuthenticated, generateResumePdfController)
+
+export default interviewRouter

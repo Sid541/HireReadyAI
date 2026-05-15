@@ -1,28 +1,27 @@
+import "dotenv/config";
 import express from "express";
 import connectDB from "./utils/db.js";
-import dotenv from "dotenv";
-import authRoutes from "./routes/authRoutes.js"
-import interviewRoutes from "./routes/interviewRoutes.js"
-import cookieParser from "cookie-parser"
-import cors from "cors"
-
-dotenv.config();
+import authRoutes from "./routes/authRoutes.js";
+import interviewRoutes from "./routes/interviewRoutes.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const PORT = 3000;
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({extended:false}))
-app.use(cookieParser());
+// ✅ ALL middleware BEFORE routes
 app.use(cors({
-    origin : "http://localhost:5173",
-    credentials : true
-}))
+    origin: "http://localhost:5173",
+    credentials: true
+}));
+app.use(express.json());
+app.use(cookieParser());
+
+// ✅ Routes AFTER middleware
+app.use("/api/auth", authRoutes);
+app.use("/api/interview", interviewRoutes);
 
 connectDB();
-
-app.use("/api/auth",authRoutes);
-app.use("/api/interview",interviewRoutes);
 
 app.listen(PORT, () => {
     console.log("Server started at 3000");
