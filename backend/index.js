@@ -6,12 +6,13 @@ import interviewRoutes from "./routes/interviewRoutes.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
+
 const PORT = 3000;
 const app = express();
 
 // ✅ ALL middleware BEFORE routes
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "http://localhost:5174",
     credentials: true
 }));
 app.use(express.json());
@@ -23,6 +24,8 @@ app.use("/api/interview", interviewRoutes);
 
 connectDB();
 
+
 app.listen(PORT, () => {
     console.log("Server started at 3000");
 });
+

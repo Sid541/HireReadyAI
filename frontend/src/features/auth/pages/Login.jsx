@@ -1,15 +1,44 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router'
 import "../auth.form.scss"
 import axios from "axios";
 
-const Login = () => {
+// ── Inline Toast Component ────────────────────────────────────────────────────
+const Toast = ({ message, type, onClose, duration = 3000 }) => {
+    React.useEffect(() => {
+        const t = setTimeout(onClose, duration)
+        return () => clearTimeout(t)
+    }, [onClose, duration])
 
+    return (
+        <div className={`toast toast--${type}`}>
+            <span className='toast__icon'>
+                {type === 'success' ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" /></svg>
+                )}
+            </span>
+            <span className='toast__message'>{message}</span>
+            <button className='toast__close' onClick={onClose} aria-label="Dismiss">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
+            </button>
+            <span className='toast__progress' style={{ animationDuration: `${duration}ms` }} />
+        </div>
+    )
+}
+
+// ── Login ─────────────────────────────────────────────────────────────────────
+const Login = () => {
     const navigate = useNavigate()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
+    const [toast, setToast] = useState(null) // { message, type }
+
+    const showToast = (message, type = 'success') => setToast({ message, type })
+    const closeToast = useCallback(() => setToast(null), [])
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,82 +46,92 @@ const Login = () => {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/api/auth/login", // ✅ fixed
+                "http://localhost:3000/api/auth/login",
                 { email, password },
                 { withCredentials: true }
-                
             );
-            
 
             console.log("Login success:", res.data);
 
             if (res.data.token) {
                 localStorage.setItem("token", res.data.token);
+                window.dispatchEvent(new Event('auth-change'));
             }
 
-            navigate("/", {
-    state: {
-        isLoggedIn: true
-    }
-});
+            showToast("Logged in successfully! Redirecting...", "success")
+
+            setTimeout(() => {
+                navigate("/", { state: { isLoggedIn: true } });
+            }, 1500)
 
         } catch (err) {
             console.error(err);
-            alert(err.response?.data?.message || "Login failed");
+            showToast(err.response?.data?.message || "Login failed. Please try again.", "error")
         } finally {
             setLoading(false);
         }
     };
 
-    if (loading) {
-        return (
-            <main>
-                <h1>Loading.......</h1>
-            </main>
-        );
-    }
-
-   // Inside the return statement of Login.jsx
-// Replace the return statement in Login.jsx with this:
-return (
-    <main>
-        <div className="form-container">
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="input-group">
-                    <label>Email</label>
-                    <input
-                        onChange={(e) => setEmail(e.target.value)}
-                        type="email"
-                        required
-                        placeholder="Enter email address"
+    return (
+        <main>
+            {/* Toast portal */}
+            <div className='toast-wrapper'>
+                {toast && (
+                    <Toast
+                        message={toast.message}
+                        type={toast.type}
+                        onClose={closeToast}
                     />
+                )}
+            </div>
+
+            <div className="form-container">
+                <div className="brand-header">
+                    <span className="brand-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M6.34 17.66l2.83-2.83M14.83 9.17l2.83-2.83"/>
+                            <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <h1>HireReady <span>AI</span></h1>
                 </div>
+                <p className="subtitle">Welcome back! Sign in to your account</p>
 
-                <div className="input-group">
-                    <label>Password</label>
-                    <input
-                        onChange={(e) => setPassword(e.target.value)}
-                        type="password"
-                        required
-                        placeholder="Enter password"
-                    />
-                </div>
+                <form onSubmit={handleSubmit}>
+                    <div className="input-group">
+                        <label>Email</label>
+                        <input
+                            onChange={(e) => setEmail(e.target.value)}
+                            type="email"
+                            required
+                            placeholder="name@example.com"
+                        />
+                    </div>
 
-                <button 
-                    className='button primary-button' 
-                    disabled={loading}
-                >
-                    {loading ? "Authenticating..." : "Login"}
-                </button>
-            </form>
+                    <div className="input-group">
+                        <label>Password</label>
+                        <input
+                            onChange={(e) => setPassword(e.target.value)}
+                            type="password"
+                            required
+                            placeholder="Enter password"
+                        />
+                    </div>
 
-            <p>
-                Don't have an account? <Link to="/register">Register</Link>
-            </p>
-        </div>
-    </main>
-)
+                    <button
+                        className='button primary-button'
+                        disabled={loading}
+                    >
+                        {loading ? "Authenticating..." : "Login"}
+                    </button>
+                </form>
+
+                <p className="switch-auth">
+                    Don't have an account? <Link to="/register">Register</Link>
+                </p>
+            </div>
+        </main>
+    )
 }
 
 export default Login;

@@ -8,6 +8,8 @@ import {
     generateResumePdfController
 } from "../controllers/interviewController.js"
 
+import { startInterviewSession, processInterviewEvaluation } from "../controllers/interviewController.js";
+
 import { isAuthenticated } from "../middlewares/authMiddleware.js"
 
 const interviewRouter = express.Router()
@@ -24,7 +26,6 @@ const upload = multer({
     }
 })
 
-// ✅ DEBUG ROUTE — no auth, accepts any field
 interviewRouter.post("/debug", multer().any(), (req, res) => {
     res.json({
         fields: Object.keys(req.body),
@@ -43,5 +44,7 @@ interviewRouter.post(
 interviewRouter.get("/", isAuthenticated, getAllInterviewReportsController)
 interviewRouter.get("/report/:interviewId", isAuthenticated, getInterviewReportByIdController)
 interviewRouter.post("/resume/pdf/:interviewReportId", isAuthenticated, generateResumePdfController)
+interviewRouter.post("/evaluate", isAuthenticated, processInterviewEvaluation)
+interviewRouter.post("/start", isAuthenticated, startInterviewSession)
 
-export default interviewRouter
+export default interviewRouter;

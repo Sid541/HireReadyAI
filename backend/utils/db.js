@@ -1,12 +1,15 @@
-import mongoose from "mongoose";
+import dns from 'dns';
+dns.setDefaultResultOrder('ipv4first'); // <-- Put it here!
 
-const connectDB = async()=>{
+import mongoose from 'mongoose';
+
+const connectDB = async () => {
     try {
-        await mongoose.connect(process.env.MONGO_URI)
-        console.log("MongoDB connected");
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log("MongoDB connected successfully");
     } catch (error) {
-        console.log(error);
+        console.error("Database connection failed:", error);
     }
-}
+};
 
 export default connectDB;

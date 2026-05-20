@@ -56,13 +56,8 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         font-weight: 700;
         letter-spacing: -0.01em;
 
-        svg {
-            stroke: $accent;
-        }
-
-        span {
-            color: $text-primary;
-        }
+        svg { stroke: $accent; }
+        span { color: $text-primary; }
     }
 
     &__actions {
@@ -101,21 +96,14 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         cursor: pointer;
         transition: opacity 0.2s;
 
-        &:hover {
-            opacity: 0.88;
-        }
-    }
-    &__actions {
-        display: flex;
-        gap: 1rem;
-        align-items: center;
+        &:hover { opacity: 0.88; }
     }
 
     &__logout {
         display: flex;
         align-items: center;
         background-color: transparent;
-        color: #7d8590; // Muted gray
+        color: #7d8590;
         border: 1px solid #30363d;
         padding: 0.5rem 1rem;
         border-radius: 8px;
@@ -125,15 +113,145 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         transition: all 0.2s ease;
 
         &:hover {
-            background-color: rgba(225, 3, 77, 0.1); // Subtle pink glow
+            background-color: rgba(225, 3, 77, 0.1);
             color: #ff2d78;
             border-color: #ff2d78;
         }
 
-        svg {
-            stroke: currentColor;
+        svg { stroke: currentColor; }
+    }
+}
+
+// ── Toast Notification ────────────────────────────────────────────────────────
+.toast-wrapper {
+    position: fixed;
+    top: 1.25rem;
+    right: 1.25rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    pointer-events: none;
+}
+
+.toast {
+    pointer-events: all;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid;
+    min-width: 260px;
+    max-width: 360px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+    animation: toast-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+    &--success {
+        background-color: #0f2a1a;
+        border-color: #1a4a2a;
+        color: #3fb950;
+
+        .toast__icon     { color: #3fb950; }
+        .toast__progress { background-color: #3fb950; }
+    }
+
+    &--error {
+        background-color: #2a0f17;
+        border-color: #4a1a24;
+        color: #ff4d4d;
+
+        .toast__icon     { color: #ff4d4d; }
+        .toast__progress { background-color: #ff4d4d; }
+    }
+
+    &__icon {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    &__message {
+        flex: 1;
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    &__close {
+        flex-shrink: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: inherit;
+        opacity: 0.6;
+        display: flex;
+        align-items: center;
+        padding: 0;
+        transition: opacity 0.15s;
+
+        &:hover { opacity: 1; }
+    }
+
+    &__progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        transform-origin: left;
+        animation: toast-drain linear forwards;
+    }
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateX(60px) scale(0.95); }
+    to   { opacity: 1; transform: translateX(0)    scale(1); }
+}
+
+@keyframes toast-drain {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+// ── Upload Section ────────────────────────────────────────────────────────────
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .upload-progress-container {
+        margin-top: 12px;
+
+        .progress-bar-bg {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 9999px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #3b82f6;
+            transition: width 0.15s ease-out;
         }
     }
+
+    .upload-success-alert {
+        color: #16a34a;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-top: 8px;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 // ── Page Header ──────────────────────────────────────────────────────────────
@@ -155,9 +273,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         line-height: 1.6;
     }
 
-    .highlight {
-        color: $accent;
-    }
+    .highlight { color: $accent; }
 }
 
 // ── Main Card ─────────────────────────────────────────────────────────────────
@@ -237,18 +353,9 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         transition: border-color 0.2s;
         line-height: 1.5;
 
-        &::placeholder {
-            color: $text-muted;
-        }
-
-        &:focus {
-            border-color: $accent;
-        }
-
-        &--short {
-            flex: unset;
-            height: 96px;
-        }
+        &::placeholder { color: $text-muted; }
+        &:focus        { border-color: $accent; }
+        &--short       { flex: unset; height: 96px; }
     }
 
     &--left {
@@ -263,9 +370,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         }
     }
 
-    &--right {
-        gap: 0.75rem;
-    }
+    &--right { gap: 0.75rem; }
 }
 
 // ── Badges ────────────────────────────────────────────────────────────────────
@@ -302,12 +407,6 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 }
 
 // ── Dropzone ──────────────────────────────────────────────────────────────────
-.upload-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
 .dropzone {
     display: flex;
     flex-direction: column;
@@ -326,23 +425,9 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         background-color: rgba($accent, 0.05);
     }
 
-    &__icon {
-        color: $accent;
-        margin-bottom: 0.25rem;
-    }
-
-    &__title {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: $text-primary;
-        margin: 0;
-    }
-
-    &__subtitle {
-        font-size: 0.75rem;
-        color: $text-muted;
-        margin: 0;
-    }
+    &__icon   { color: $accent; margin-bottom: 0.25rem; }
+    &__title  { font-size: 0.875rem; font-weight: 500; color: $text-primary; margin: 0; }
+    &__subtitle { font-size: 0.75rem; color: $text-muted; margin: 0; }
 }
 
 // ── OR Divider ────────────────────────────────────────────────────────────────
@@ -353,17 +438,14 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     color: $text-muted;
     font-size: 0.75rem;
 
-    &::before,
-    &::after {
+    &::before, &::after {
         content: '';
         flex: 1;
         height: 1px;
         background-color: $border-color;
     }
 
-    span {
-        white-space: nowrap;
-    }
+    span { white-space: nowrap; }
 }
 
 // ── Self Description ──────────────────────────────────────────────────────────
@@ -383,11 +465,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     border: 1px solid $info-border;
     border-radius: 0.5rem;
 
-    &__icon {
-        flex-shrink: 0;
-        color: #4a90e2;
-        margin-top: 1px;
-    }
+    &__icon { flex-shrink: 0; color: #4a90e2; margin-top: 1px; }
 
     p {
         margin: 0;
@@ -395,16 +473,16 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         color: #8ab4f8;
         line-height: 1.5;
 
-        strong {
-            color: $text-primary;
-        }
+        strong { color: $text-primary; }
     }
 }
 
 // ── Generate Button ───────────────────────────────────────────────────────────
 .generate-btn {
+    position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
     background: linear-gradient(135deg, $accent 0%, darken($accent, 10%) 100%);
@@ -416,29 +494,58 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     cursor: pointer;
     transition: opacity 0.2s, transform 0.1s;
     font-family: $font-stack;
+    overflow: hidden;
 
-    &:hover {
-        opacity: 0.9;
+    &:hover:not(:disabled) { opacity: 0.9; }
+    &:active:not(:disabled) { transform: scale(0.98); }
+    &:disabled { cursor: not-allowed; opacity: 0.85; }
+
+    &--processing::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 3px;
+        width: 40%;
+        background: rgba(#fff, 0.7);
+        border-radius: 0 2px 2px 0;
+        animation: btn-sweep 1.4s ease-in-out infinite;
     }
 
-    &:active {
-        transform: scale(0.98);
+    &__spinner {
+        width: 15px;
+        height: 15px;
+        border: 2px solid rgba(#fff, 0.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        flex-shrink: 0;
     }
 }
 
-.recent-reports{
+@keyframes btn-sweep {
+    0%   { left: -40%; }
+    100% { left: 140%; }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+// ── Recent Reports ────────────────────────────────────────────────────────────
+.recent-reports {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     width: 100%;
     max-width: 900px;
 
-    .reports-list{
+    .reports-list {
         display: flex;
         gap: 0.75rem;
         flex-wrap: wrap;
 
-        .report-item{
+        .report-item {
             background-color: $bg-card;
             border: 1px solid $border-color;
             border-radius: 0.5rem;
@@ -460,7 +567,6 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     }
 }
 
-
 // ── Page Footer ───────────────────────────────────────────────────────────────
 .page-footer {
     display: flex;
@@ -472,8 +578,6 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
         text-decoration: none;
         transition: color 0.2s;
 
-        &:hover {
-            color: $text-primary;
-        }
+        &:hover { color: $text-primary; }
     }
 }

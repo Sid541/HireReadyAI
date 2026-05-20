@@ -83,6 +83,11 @@ const Interview = () => {
         report.matchScore >= 80 ? 'score--high' :
             report.matchScore >= 60 ? 'score--mid' : 'score--low'
 
+    // ── FIX: dynamic label and color based on 75% threshold ──
+    const isStrongMatch = report.matchScore >= 75
+    const scoreLabel = isStrongMatch ? 'Strong match for this role' : 'Weak match for this role'
+    const scoreLabelClass = isStrongMatch ? 'match-score__sub--strong' : 'match-score__sub--weak'
+
 
     return (
         <div className='interview-page'>
@@ -182,7 +187,8 @@ const Interview = () => {
                             <span className='match-score__value'>{report.matchScore}</span>
                             <span className='match-score__pct'>%</span>
                         </div>
-                        <p className='match-score__sub'>Strong match for this role</p>
+                        {/* ── FIX: was hardcoded "Strong match for this role" ── */}
+                        <p className={`match-score__sub ${scoreLabelClass}`}>{scoreLabel}</p>
                     </div>
 
                     <div className='sidebar-divider' />

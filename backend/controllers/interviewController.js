@@ -1,7 +1,7 @@
 import { createRequire } from "module"
 const require = createRequire(import.meta.url)
 const PDFParser = require("pdf2json")
-
+import { generateLiveQuestions, evaluateLiveInterview } from "../services/interviewService.js";
 import { generateInterviewReport,generateResumePdf } from "../services/ai.service.js"
 import interviewReportModel from "../models/interviewReport.model.js"
 
@@ -154,3 +154,41 @@ export async function generateResumePdfController(req, res) {
         res.status(500).json({ message: error.message })
     }
 }
+
+/**
+ * Handles the HTTP setup route context task
+ */
+export const startInterviewSession = async (req, res) => {
+    try {
+        const { jobRole, difficulty } = req.body;
+
+        if (!jobRole || !difficulty) {
+            return res.status(400).json({ message: "Missing required parameters: jobRole or difficulty." });
+        }
+
+        const questionsData = await generateLiveQuestions({ jobRole, difficulty });
+        return res.status(200).json(questionsData);
+    } catch (error) {
+        console.error("Controller Error inside startInterviewSession:", error.message);
+        return res.status(500).json({ error: error.message || "Failed to spin up interview runtime variables." });
+    }
+};
+
+/**
+ * Handles processing completed transcript logs to respond with deep report arrays
+ */
+export const processInterviewEvaluation = async (req, res) => {
+    try {
+        const { jobRole, difficulty, transcript } = req.body;
+
+        if (!jobRole || !difficulty || !transcript) {
+            return res.status(400).json({ message: "Missing required payload arrays for computation." });
+        }
+
+        const evaluationReport = await evaluateLiveInterview({ jobRole, difficulty, transcript });
+        return res.status(200).json(evaluationReport);
+    } catch (error) {
+        console.error("Controller Error inside processInterviewEvaluation:", error.message);
+        return res.status(500).json({ error: error.message || "Failed to process interview diagnostic evaluation." });
+    }
+};

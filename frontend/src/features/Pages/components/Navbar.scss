@@ -1,0 +1,72 @@
+// ── AI INTERVIEW MOVING PORTAL BUTTON ────────────────────────────────────────
+.home-navbar__ai-portal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: linear-gradient(135deg, rgba(#e1034d, 0.1) 0%, rgba(#e1034d, 0.2) 100%);
+    border: 1px solid rgba(#e1034d, 0.4);
+    color: #e6edf3;
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-right: 0.75rem;
+
+    &:hover {
+        background: linear-gradient(135deg, rgba(#e1034d, 0.2) 0%, rgba(#e1034d, 0.35) 100%);
+        border-color: #e1034d;
+        box-shadow: 0 0 15px rgba(#e1034d, 0.25);
+        transform: translateY(-1px);
+    }
+
+    .ai-glow-pulse-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        width: 16px;  // Matches icon width
+        height: 16px; // Matches icon height
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #e1034d;
+            border-radius: 50%;
+            filter: blur(4px);
+            opacity: 0.4;
+            animation: ai-pulse-glow 2s infinite ease-in-out;
+        }
+    }
+
+    svg.moving-spark-icon {
+        color: #e1034d;
+        position: relative;
+        z-index: 2;
+        animation: ai-icon-float 3s infinite ease-in-out;
+    }
+}
+
+// ── KEYFRAME ANIMATIONS ──────────────────────────────────────────────────────
+@keyframes ai-icon-float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: translateY(-2px) rotate(15deg) scale(1.05);
+    }
+}
+
+@keyframes ai-pulse-glow {
+    0%, 100% {
+        transform: scale(0.8);
+        opacity: 0.3;
+    }
+    50% {
+        transform: scale(1.4);
+        opacity: 0.6;
+    }
+}

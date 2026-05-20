@@ -1,0 +1,514 @@
+// ── Shared Config Variables ──────────────────────────────────────────────────
+$primary-color: #e1034d;
+$primary-glow: rgba(225, 3, 77, 0.15);
+$bg-dark: #0d1117;
+$card-bg: #161b22;
+$border-color: #30363d;
+$text-primary: #e6edf3;
+$text-muted: #8b949e;
+$transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+.dashboard-layout {
+    width: 100%;
+    min-height: 100vh;
+    background-color: $bg-dark;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-start: flex-start;
+    padding: 3rem 1.5rem;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: $text-primary;
+
+    // ── BACK BUTTON NAVIGATION DESIGN ────────────────────────────────────────
+    .back-navigation-container {
+        width: 100%;
+        max-width: 1200px;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: flex-start;
+
+        @media (max-width: 900px) {
+            max-width: 1100px;
+        }
+
+        .back-to-home-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: transparent;
+            border: 1px solid $border-color;
+            border-radius: 0.5rem;
+            color: $text-muted;
+            padding: 0.6rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: $transition;
+            outline: none;
+
+            &:hover {
+                color: $text-primary;
+                background-color: #21262d;
+                border-color: $text-muted;
+            }
+
+            svg {
+                transition: transform 0.2s ease;
+            }
+
+            &:hover svg {
+                transform: translateX(-3px); // Subtle push indicator effect
+            }
+        }
+    }
+}
+
+// ── STAGE A: CONFIGURATION CONTROL CENTER ────────────────────────────────────
+.setup-hero-wrapper {
+    width: 100%;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem;
+    align-items: center;
+    margin-top: 2rem; // Adjusted down slightly to compensate for the top bar space safely
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        margin-top: 1rem;
+        text-align: center;
+    }
+
+    .text-section {
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba($primary-color, 0.1);
+            color: $primary-color;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin: 0 0 1.5rem 0;
+            letter-spacing: -0.02em;
+
+            span {
+                color: $primary-color;
+            }
+
+            @media (max-width: 600px) {
+                font-size: 2.2rem;
+            }
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: $text-muted;
+            line-height: 1.6;
+            margin: 0;
+        }
+    }
+
+    .form-card-container {
+        background-color: $card-bg;
+        border: 1px solid $border-color;
+        border-radius: 1.5rem;
+        padding: 3rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+        h2 {
+            margin: 0 0 2rem 0;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: left;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+
+            label {
+                font-size: 0.85rem;
+                font-weight: 600;
+                color: $text-muted;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            input,
+            select {
+                background-color: $bg-dark;
+                border: 1px solid $border-color;
+                border-radius: 0.75rem;
+                padding: 0.9rem 1rem;
+                color: $text-primary;
+                font-size: 0.95rem;
+                outline: none;
+                transition: $transition;
+
+                &:focus {
+                    border-color: $primary-color;
+                    box-shadow: 0 0 0 3px $primary-glow;
+                }
+            }
+        }
+
+        .button.primary-button {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+
+            .spinner {
+                animation: spin 1s linear infinite;
+            }
+        }
+    }
+}
+
+// ── STAGE B: LIVE WORKSPACE SIMULATION ───────────────────────────────────────
+.live-workspace-grid {
+    width: 100%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 2.5rem;
+    align-items: start;
+
+    @media (max-width: 900px) {
+        grid-template-columns: 1fr;
+    }
+
+    .left-stream-deck,
+    .right-input-deck {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .video-card {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background-color: #000;
+        border-radius: 1.25rem;
+        border: 1px solid $border-color;
+        overflow: hidden;
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+        }
+
+        .video-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #484f58;
+
+            span {
+                font-size: 0.85rem;
+                font-weight: 600;
+            }
+        }
+
+        .proctor-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid $border-color;
+            padding: 0.4rem 0.8rem;
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+
+            .pulse-dot {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: #3fb950;
+                animation: pulse-slow 1.5s infinite ease-in-out;
+            }
+        }
+    }
+
+    .instruction-card {
+        background-color: $card-bg;
+        border: 1px solid $border-color;
+        border-radius: 1.25rem;
+        padding: 1.5rem 2rem;
+
+        h3 {
+            margin: 0 0 1rem 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+
+            li {
+                font-size: 0.85rem;
+                color: $text-muted;
+                line-height: 1.4;
+            }
+        }
+    }
+
+    .assessment-card {
+        background-color: $card-bg;
+        border: 1px solid $border-color;
+        border-radius: 1.5rem;
+        padding: 3rem;
+        min-height: 535px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        @media (max-width: 600px) {
+            padding: 1.75rem;
+        }
+
+        .card-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+
+            .step-count {
+                font-size: 0.8rem;
+                font-weight: 700;
+                color: $primary-color;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .progress-bar-track {
+                width: 100%;
+                height: 4px;
+                background-color: $bg-dark;
+                border-radius: 2px;
+                overflow: hidden;
+
+                .fill {
+                    height: 100%;
+                    background-color: $primary-color;
+                    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+            }
+        }
+
+        .live-question-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.4;
+            margin: 2rem 0;
+        }
+
+        .dictation-control-zone {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+
+            .action-mic-trigger {
+                width: 52px;
+                height: 52px;
+                border-radius: 50%;
+                border: 1px solid $border-color;
+                background-color: $bg-dark;
+                color: $text-primary;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: $transition;
+                outline: none;
+
+                &:hover {
+                    background-color: #21262d;
+                    border-color: $text-muted;
+                }
+
+                &.active {
+                    background-color: $primary-color;
+                    border-color: transparent;
+                    box-shadow: 0 0 15px rgba($primary-color, 0.35);
+                }
+            }
+
+            .pulse-text {
+                font-size: 0.85rem;
+                color: $text-muted;
+                font-weight: 500;
+            }
+        }
+
+        .transcript-preview-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+
+            label {
+                font-size: 0.75rem;
+                font-weight: 700;
+                color: $text-muted;
+                text-transform: uppercase;
+            }
+
+            p {
+                background-color: $bg-dark;
+                border: 1px solid $border-color;
+                border-radius: 0.75rem;
+                padding: 1.25rem;
+                margin: 0;
+                min-height: 90px;
+                font-size: 0.95rem;
+                line-height: 1.5;
+
+                &.empty {
+                    color: #484f58;
+                    font-style: italic;
+                }
+
+                &.filled {
+                    color: $text-primary;
+                }
+            }
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: flex-end; // Fixed typo: changed 'justify-flex' to 'justify-content'
+            border-top: 1px solid $border-color;
+            padding-top: 1.5rem;
+
+            .button.primary-button {
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                margin: 0;
+                padding: 0.8rem 1.5rem;
+            }
+        }
+    }
+}
+
+// ── STAGE C: RADAR EVALUATING LOADER ─────────────────────────────────────────
+.processing-container {
+    text-align: center;
+    padding: 8rem 2rem;
+    max-width: 600px;
+
+    h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin: 2rem 0 0.75rem 0;
+    }
+
+    p {
+        color: $text-muted;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .radar-loader {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+
+        .circle {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 2px solid $primary-color;
+
+            &.core {
+                background-color: $primary-color;
+                transform: scale(0.25);
+            }
+
+            &.wave-1 {
+                animation: radar-burst 2s infinite linear;
+            }
+
+            &.wave-2 {
+                animation: radar-burst 2s infinite linear 1s;
+            }
+        }
+    }
+}
+
+// ── System Workspace Animations ──────────────────────────────────────────────
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes radar-burst {
+    0% {
+        transform: scale(0.25);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+@keyframes pulse-slow {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
