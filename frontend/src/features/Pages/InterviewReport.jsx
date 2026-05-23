@@ -11,16 +11,16 @@ import {
     Trophy,
     TrendingUp
 } from 'lucide-react';
-import "./InterviewReport.scss"
+import "./InterviewReport.scss";
 
 const InterviewReport = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const reportRef = useRef(null);
 
-    // Retrieve data safely from router navigation parameters
+    // ✅ FIXED: Safely extract navigation state with structured fallbacks to prevent runtime extraction crashes
     const report = location.state?.reportData;
-    const meta = location.state?.meta;
+    const meta = location.state?.meta || { jobRole: "Technical Candidate", difficulty: "medium" };
 
     // Handle empty state if users navigate to the URL directly without context records
     if (!report) {
@@ -39,28 +39,26 @@ const InterviewReport = () => {
     }
 
     const handleExportPDFReport = () => {
-    const element = reportRef.current;
-    
-    const options = {
-        margin: [0.3, 0.3, 0.3, 0.3], // Adds explicitly defined page boundaries
-        filename: `AI_Evaluation_Report_${meta?.jobRole ? meta.jobRole.replace(/\s+/g, '_') : 'Mern_Stack_Developer'}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true,
-            logging: false,
-            letterRendering: true, // Optimizes text mapping inside flexible layouts
-            scrollX: 0,
-            scrollY: 0
-            
-        },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css'] } // Prevents text cutting off mid-sentence across pages
-    };
+        const element = reportRef.current;
+        
+        const options = {
+            margin: [0.3, 0.3, 0.3, 0.3], 
+            filename: `AI_Evaluation_Report_${meta?.jobRole ? meta.jobRole.replace(/\s+/g, '_') : 'Mern_Stack_Developer'}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                scale: 2, 
+                useCORS: true,
+                logging: false,
+                letterRendering: true, 
+                scrollX: 0,
+                scrollY: 0
+            },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css'] } 
+        };
 
-    // Use the promise chain to guarantee execution context remains bound to the elements
-    html2pdf().set(options).from(element).toContainer().toCanvas().toImg().toPdf().save();
-};
+        html2pdf().set(options).from(element).toContainer().toCanvas().toImg().toPdf().save();
+    };
 
     return (
         <main className="dashboard-layout report-workspace-wrapper">
@@ -79,11 +77,13 @@ const InterviewReport = () => {
                     <div className="left-meta">
                         <span className="pill">OFFICIAL ASSESSMENT REPORT</span>
                         <h1>Technical Performance Metrics</h1>
-                        <p>Target Framework Profiles: <strong>{meta?.jobRole}</strong> • Mode: {meta?.difficulty.toUpperCase()}</p>
+                        {/* ✅ FIXED: Safeguarded strings with optional chaining and variable fallbacks to stop white-screen errors */}
+                        <p>Target Framework Profiles: <strong>{meta?.jobRole || "Technical Candidate"}</strong> • Mode: {(meta?.difficulty || "medium").toUpperCase()}</p>
                     </div>
                     <div className="right-score-radial">
                         <div className="radial-inner">
-                            <span className="numeric">{report.overallScore}</span>
+                            {/* ✅ FIXED: Added multi-key backend parsing compatibility for scores */}
+                            <span className="numeric">{report?.overallScore ?? report?.score ?? 0}</span>
                             <span className="label">OVERALL GRADIENT</span>
                         </div>
                     </div>
@@ -96,7 +96,7 @@ const InterviewReport = () => {
                             <MessageSquare size={18} />
                             <h3>Communication & Articulation Delivery</h3>
                         </div>
-                        <p>{report.communicationRating}</p>
+                        <p>{report?.communicationRating || "No description provided."}</p>
                     </div>
 
                     <div className="metric-tile tile-strengths">
@@ -104,7 +104,7 @@ const InterviewReport = () => {
                             <Trophy size={18} />
                             <h3>Demonstrated Core Technical Strengths</h3>
                         </div>
-                        <p>{report.strengths}</p>
+                        <p>{report?.strengths || "No specific strengths highlighted."}</p>
                     </div>
 
                     <div className="metric-tile tile-weaknesses">
@@ -112,7 +112,7 @@ const InterviewReport = () => {
                             <XCircle size={18} />
                             <h3>Identified Concept Vulnerabilities</h3>
                         </div>
-                        <p>{report.weaknesses}</p>
+                        <p>{report?.weaknesses || "No specific vulnerabilities logged."}</p>
                     </div>
                 </div>
 
@@ -123,12 +123,16 @@ const InterviewReport = () => {
                         <h2>Targeted Curated Action Items For Upskilling</h2>
                     </div>
                     <div className="action-cards-container">
-                        {report.improvements?.map((item, idx) => (
-                            <div key={idx} className="action-bullet-card">
-                                <div className="bullet-num"><Lightbulb size={16} /></div>
-                                <p>{item}</p>
-                            </div>
-                        ))}
+                        {report?.improvements && report.improvements.length > 0 ? (
+                            report.improvements.map((item, idx) => (
+                                <div key={idx} className="action-bullet-card">
+                                    <div className="bullet-num"><Lightbulb size={16} /></div>
+                                    <p>{item}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="no-data-fallback">No improvements recorded.</p>
+                        )}
                     </div>
                 </div>
 
@@ -140,24 +144,28 @@ const InterviewReport = () => {
                     </div>
 
                     <div className="timeline-stream">
-                        {report.perQuestionAnalysis?.map((item, idx) => (
-                            <div key={idx} className="timeline-node-row">
-                                <div className="node-sidebar">
-                                    <div className="indicator-badge">{idx + 1}</div>
-                                    <div className="connector-line" />
-                                </div>
-                                <div className="node-content-block">
-                                    <div className="block-meta-hdr">
-                                        <h4>Evaluation Matrix Module {idx + 1}</h4>
-                                        <span className="block-score">Score Weight: <strong>{item.score}/100</strong></span>
+                        {report?.perQuestionAnalysis && report.perQuestionAnalysis.length > 0 ? (
+                            report.perQuestionAnalysis.map((item, idx) => (
+                                <div key={idx} className="timeline-node-row">
+                                    <div className="node-sidebar">
+                                        <div className="indicator-badge">{idx + 1}</div>
+                                        <div className="connector-line" />
                                     </div>
-                                    <p className="evaluated-question">"{item.question}"</p>
-                                    <div className="feedback-sub-callout">
-                                        <p><strong>Gemini Pipeline Auditor Analysis:</strong> {item.feedback}</p>
+                                    <div className="node-content-block">
+                                        <div className="block-meta-hdr">
+                                            <h4>Evaluation Matrix Module {idx + 1}</h4>
+                                            <span className="block-score">Score Weight: <strong>{item?.score ?? 0}/100</strong></span>
+                                        </div>
+                                        <p className="evaluated-question">"{item?.question || "Question Text Unavailable"}"</p>
+                                        <div className="feedback-sub-callout">
+                                            <p><strong>Gemini Pipeline Auditor Analysis:</strong> {item?.feedback || "No feedback generated for this section."}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            <p className="no-data-fallback">No granular timeline data available.</p>
+                        )}
                     </div>
                 </div>
             </div>
