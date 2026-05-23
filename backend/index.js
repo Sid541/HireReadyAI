@@ -6,16 +6,11 @@ import connectDB from "./utils/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import interviewRoutes from "./routes/interviewRoutes.js";
 
-// Render automatically injects an environment variable named PORT. 
-// Falling back to 3000 ensures your local development setup remains uninterrupted.
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-// ==========================================
-// 🛠️ MIDDLEWARE LAYER (Must execute before routes)
-// ==========================================
 
-// Setup allowed origins checklist
+
 const allowedOrigins = [
     "http://localhost:5173",                     // Local Vite development site
     "https://hirereadyai-1.onrender.com"         // Production live frontend site
