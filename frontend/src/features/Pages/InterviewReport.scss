@@ -4,8 +4,8 @@ $primary-glow: rgba(225, 3, 77, 0.15);
 $bg-dark: #0d1117;
 $card-bg: #161b22;
 $border-color: #30363d;
-$text-primary: #151516;
-$text-muted: #8b949e;
+$text-primary: #e6edf3;
+$text-muted: #070707f5;
 $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
 // ── STANDALONE INTERVIEW REPORT MAIN VIEW ────────────────────────────────────
@@ -284,31 +284,26 @@ $transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 // Append this rule at the bottom of InterviewReport.scss
-// Append this rule at the absolute bottom of InterviewReport.scss
 @media print {
   .premium-report-paper {
     background-color: #0d1117 !important;
     color: #ffffff !important;
-    display: block !important;
+    display: block !important; // Forces container visibility
+    height: auto !important;
+    overflow: visible !important;
     
-    // 🚀 CRITICAL FIXES FOR INK/COLOR DROP RECOVERY:
-    -webkit-print-color-adjust: exact !important; // Forces WebKit engines (Chrome/Safari) to render dark backgrounds
-    print-color-adjust: exact !important;         // Standard property forcing exact theme color preservation
-  }
-
-  // Ensure inner cards keep their darker color definition over the parent page background
-  .metric-tile, 
-  .action-bullet-card, 
-  .node-content-block {
-    background-color: #161b22 !important;
-    border: 1px solid #30363d !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  // Prevent top navigational elements from appearing inside the compiled document
-  .top-utility-navigation,
-  .back-navigation-container {
-    display: none !important;
+    // Convert grids/flexbox back to standard display blocks if cards collapse
+    .analytics-metrics-grid, 
+    .action-cards-container, 
+    .timeline-stream {
+      display: block !important;
+    }
+    
+    .metric-tile, 
+    .action-bullet-card, 
+    .timeline-node-row {
+      page-break-inside: avoid !important;
+      margin-bottom: 1.5rem !important;
+    }
   }
 }
