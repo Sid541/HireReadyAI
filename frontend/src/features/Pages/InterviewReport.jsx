@@ -39,16 +39,28 @@ const InterviewReport = () => {
     }
 
     const handleExportPDFReport = () => {
-        const element = reportRef.current;
-        const options = {
-            margin: 0.4,
-            filename: `AI_Evaluation_Report_${meta?.jobRole.replace(/\s+/g, '_')}.pdf`,
-            image: { type: 'jpeg', quality: 0.99 },
-            html2canvas: { scale: 2, backgroundColor: '#0d1117', useCORS: true },
-            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
-        html2pdf().set(options).from(element).save();
+    const element = reportRef.current;
+    
+    const options = {
+        margin: [0.3, 0.3, 0.3, 0.3], // Adds explicitly defined page boundaries
+        filename: `AI_Evaluation_Report_${meta?.jobRole ? meta.jobRole.replace(/\s+/g, '_') : 'Mern_Stack_Developer'}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true,
+            logging: false,
+            letterRendering: true, // Optimizes text mapping inside flexible layouts
+            scrollX: 0,
+            scrollY: 0
+            
+        },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css'] } // Prevents text cutting off mid-sentence across pages
     };
+
+    // Use the promise chain to guarantee execution context remains bound to the elements
+    html2pdf().set(options).from(element).toContainer().toCanvas().toImg().toPdf().save();
+};
 
     return (
         <main className="dashboard-layout report-workspace-wrapper">
