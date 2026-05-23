@@ -15,6 +15,7 @@ import {
     ArrowLeft // ◄ Added ArrowLeft icon for the back button
 } from 'lucide-react';
 import "./AllInterview.scss";
+const VITE_API_URL = import.meta.env.VITE_API_URL
 
 // ── Inline Toast Component ───────────────────────────────────────────────────
 const Toast = ({ message, type, onClose, duration = 3000 }) => {
@@ -129,7 +130,7 @@ const AIInterview = () => {
 
         try {
             const res = await axios.post(
-                'http://localhost:3000/api/interview/start',
+                `${VITE_API_URL}/api/interview/start`,
                 { jobRole, difficulty },
                 getAuthHeaders()
             );
@@ -196,7 +197,7 @@ const AIInterview = () => {
 
         try {
             const res = await axios.post(
-                'http://localhost:3000/api/interview/evaluate',
+                'VITE_API_URL/api/interview/evaluate',
                 { jobRole, difficulty, transcript: finalTranscript },
                 getAuthHeaders()
             );

@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router'
 import "../auth.form.scss"
 import axios from "axios";
+const VITE_API_URL = import.meta.env.VITE_API_URL
 
 // ── Inline Toast Component ────────────────────────────────────────────────────
 const Toast = ({ message, type, onClose, duration = 3000 }) => {
@@ -46,7 +47,7 @@ const Login = () => {
 
         try {
             const res = await axios.post(
-                "http://localhost:3000/api/auth/login",
+                `${VITE_API_URL}/api/auth/login`,
                 { email, password },
                 { withCredentials: true }
             );

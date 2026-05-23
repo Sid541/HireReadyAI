@@ -4,6 +4,7 @@ import axios from "axios"
 import { useNavigate } from 'react-router'
 import { useLocation } from 'react-router';
 import Navbar from './components/Navbar';
+const VITE_API_URL = import.meta.env.VITE_API_URL
 
 // ── Inline Toast Component ────────────────────────────────────────────────────
 const Toast = ({ message, type, onClose, duration = 3000 }) => {
@@ -72,7 +73,7 @@ const Home = () => {
             if (resumeFile) formData.append("resumeFile", resumeFile)
 
             const response = await axios.post(
-                "http://localhost:3000/api/interview",
+                `${VITE_API_URL}/api/interview`,
                 formData,
                 {
                     withCredentials: true,
