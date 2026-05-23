@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import html2pdf from 'html2pdf.js';
-import { 
-    Download, 
-    ArrowLeft, 
-    CheckCircle2, 
-    XCircle, 
-    Lightbulb, 
-    MessageSquare, 
+import {
+    Download,
+    ArrowLeft,
+    CheckCircle2,
+    XCircle,
+    Lightbulb,
+    MessageSquare,
     Trophy,
     TrendingUp
 } from 'lucide-react';
@@ -40,21 +40,23 @@ const InterviewReport = () => {
 
     const handleExportPDFReport = () => {
         const element = reportRef.current;
-        
+
         const options = {
-            margin: [0.3, 0.3, 0.3, 0.3], 
+            margin: [0.3, 0.3, 0.3, 0.3],
             filename: `AI_Evaluation_Report_${meta?.jobRole ? meta.jobRole.replace(/\s+/g, '_') : 'Mern_Stack_Developer'}.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { 
-                scale: 2, 
+            html2canvas: {
+                scale: 2,
                 useCORS: true,
                 logging: false,
-                letterRendering: true, 
+                letterRendering: true,
                 scrollX: 0,
-                scrollY: 0
+                scrollY: 0,
+                backgroundColor: null, // Stops html2canvas from forcing a solid white canvas background
+                theme: 'dark'
             },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-            pagebreak: { mode: ['avoid-all', 'css'] } 
+            pagebreak: { mode: ['avoid-all', 'css'] }
         };
 
         html2pdf().set(options).from(element).toContainer().toCanvas().toImg().toPdf().save();
