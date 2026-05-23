@@ -197,7 +197,7 @@ const AIInterview = () => {
 
         try {
             const res = await axios.post(
-                'VITE_API_URL/api/interview/evaluate',
+                `${VITE_API_URL}/api/interview/evaluate`,
                 { jobRole, difficulty, transcript: finalTranscript },
                 getAuthHeaders()
             );
